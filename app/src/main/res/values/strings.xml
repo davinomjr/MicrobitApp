@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">MicrobitAppEngEmbarcados</string>
+    <string name="app_name">Microbit Car Assist</string>
+    <string name="find_microbit">Find Microbits</string>
+    <string name="main_activity_title">Microbit Car Assist</string>
 </resources>

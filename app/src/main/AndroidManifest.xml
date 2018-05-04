@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cin.ufpe.br.microbitappengembarcados">
+    package="cin.ufpe.br.microbit_car_assist">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -21,7 +21,14 @@
 
         <service android:name="com.bluetooth.mwoolley.microbitbledemo.bluetooth.BleAdapterService" />
 
-        <activity android:name=".MainActivity"></activity>
+        <activity
+            android:name="cin.ufpe.br.microbit_car_assist.MainActivity"
+            android:label="@string/main_activity_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

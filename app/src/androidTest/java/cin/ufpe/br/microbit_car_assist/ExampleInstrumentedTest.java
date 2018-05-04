@@ -1,4 +1,4 @@
-package cin.ufpe.br.microbitappengembarcados;
+package cin.ufpe.br.microbit_car_assist;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

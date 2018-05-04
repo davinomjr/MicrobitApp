@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "978756347619",
+    "firebase_url": "https://microbitcarassist.firebaseio.com",
+    "project_id": "microbitcarassist",
+    "storage_bucket": "microbitcarassist.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978756347619:android:6712f1360c5e34d1",
+        "android_client_info": {
+          "package_name": "cin.ufpe.br.microbitappengembarcados"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978756347619-jhkqllc6lmk254a0sinvobcegd4n19r7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cin.ufpe.br.microbitappengembarcados",
+            "certificate_hash": "836e0d31de85390beb1734413c1cb31608b9241f"
+          }
+        },
+        {
+          "client_id": "978756347619-u9pa1a7cfc81re5u7akv05ej3bu6tcun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTs_EvcxepJ98dx1nVHdaZwbRAYplb6u8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978756347619-u9pa1a7cfc81re5u7akv05ej3bu6tcun.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
