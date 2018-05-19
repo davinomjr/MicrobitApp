@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:978756347619:android:6712f1360c5e34d1",
         "android_client_info": {
-          "package_name": "cin.ufpe.br.microbitappengembarcados"
+          "package_name": "cin.ufpe.br.microbit_car_assist"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "978756347619-jhkqllc6lmk254a0sinvobcegd4n19r7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "cin.ufpe.br.microbitappengembarcados",
+            "package_name": "cin.ufpe.br.microbit_car_assist",
             "certificate_hash": "836e0d31de85390beb1734413c1cb31608b9241f"
           }
         },

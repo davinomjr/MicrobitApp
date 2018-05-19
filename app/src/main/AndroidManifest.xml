@@ -18,17 +18,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <service android:name="com.bluetooth.mwoolley.microbitbledemo.bluetooth.BleAdapterService" />
 
         <activity
-            android:name="cin.ufpe.br.microbit_car_assist.MainActivity"
+            android:name="cin.ufpe.br.microbit_car_assist.presentation.ui.activity.MainActivity"
             android:label="@string/main_activity_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name="cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleMapActivity"
+            android:label="@string/title_activity_hole_map" />
+        <activity
+            android:name="cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

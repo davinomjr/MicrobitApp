@@ -1,4 +1,4 @@
-package cin.ufpe.br.microbit_car_assist.firebase
+package cin.ufpe.br.microbit_car_assist.storage
 
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -11,13 +11,13 @@ import com.google.firebase.database.FirebaseDatabase
 class Database {
 
     companion object {
-        fun it() : DatabaseReference {
-            return FirebaseDatabase.getInstance().getReference("holes")
-        }
 
-        fun configure(){
+        init{
             FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         }
+
+        val it: DatabaseReference = FirebaseDatabase.getInstance().getReference("holes")
+
     }
 
 }

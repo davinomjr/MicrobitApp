@@ -2,4 +2,7 @@
     <string name="app_name">Microbit Car Assist</string>
     <string name="find_microbit">Find Microbits</string>
     <string name="main_activity_title">Microbit Car Assist</string>
+    <string name="title_activity_hole_map">Map</string>
+    <string name="no_holes">No holes found</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
