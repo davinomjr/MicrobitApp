@@ -28,10 +28,11 @@ import com.google.android.gms.maps.model.MarkerOptions
  */
 class HoleMapFragment : Fragment(), OnMapReadyCallback, HolePresenter.View {
 
-    private lateinit var mMap: GoogleMap
     private lateinit var mPresenter: HolePresenter
-    private var mMapReady: Boolean = false
+
+    private lateinit var mMap: GoogleMap
     private val TAG: String = "HoleMapFragment"
+    private var mMapReady: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +85,7 @@ class HoleMapFragment : Fragment(), OnMapReadyCallback, HolePresenter.View {
     }
 
     override fun showHolesOnMap(holes: List<Hole>) {
+        Log.i(TAG, "showHolesOnMap")
         if(mMapReady) {
             if (holes.any()) {
                 holes.forEach({ hole: Hole? ->
@@ -100,6 +102,4 @@ class HoleMapFragment : Fragment(), OnMapReadyCallback, HolePresenter.View {
             Log.e(TAG, "Map not ready yet!")
         }
     }
-
-
 }

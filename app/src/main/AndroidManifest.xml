@@ -41,12 +41,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name="cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleMapActivity"
-            android:label="@string/title_activity_hole_map" />
-        <activity
-            android:name="cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

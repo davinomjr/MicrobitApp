@@ -9,5 +9,5 @@ import cin.ufpe.br.microbit_car_assist.domain.interactor.Interactor
  */
 
 interface Executor {
-    fun execute(interactor: Interactor)
+    fun execute(interactor: AbsInteractor)
 }

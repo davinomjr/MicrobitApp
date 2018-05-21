@@ -1,13 +1,9 @@
 package cin.ufpe.br.microbit_car_assist.domain.executor
 
 import cin.ufpe.br.microbit_car_assist.domain.interactor.AbsInteractor
-import cin.ufpe.br.microbit_car_assist.domain.interactor.Interactor
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import javax.xml.datatype.DatatypeConstants.SECONDS
-
-
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
@@ -41,9 +37,9 @@ class ThreadExecutor : Executor {
     }
 
 
-    override fun execute(interactor: Interactor) {
+    override fun execute(interactor: AbsInteractor) {
         mThreadPoolExecutor.submit {
-            interactor.execute()
+            interactor.run()
             interactor.onFinished()
         }
     }

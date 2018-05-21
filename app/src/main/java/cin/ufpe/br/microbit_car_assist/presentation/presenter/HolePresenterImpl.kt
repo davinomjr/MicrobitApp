@@ -1,6 +1,5 @@
 package cin.ufpe.br.microbit_car_assist.presentation.presenter
 
-import android.view.View
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import cin.ufpe.br.microbit_car_assist.domain.executor.Executor
 import cin.ufpe.br.microbit_car_assist.domain.executor.MainThread

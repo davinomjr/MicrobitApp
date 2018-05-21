@@ -1,6 +1,7 @@
 package cin.ufpe.br.microbit_car_assist.storage
 
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
+import java.util.*
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
@@ -15,7 +16,7 @@ class HoleRepositoryImpl : HoleRepository{
     }
 
     override fun getHoles(): List<Hole> {
-        return mutableListOf<Hole>()
+        return Collections.singletonList(Hole(10.0, 10.0, "t"))
     }
 
 //
