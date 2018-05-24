@@ -10,21 +10,20 @@ import cin.ufpe.br.microbit_car_assist.storage.HoleRepository
  * at 05/18/2018 11:41 AM
  */
 
-class HoleInteractorImpl(mExecutor: Executor,
+class GetHolesInteractor(mExecutor: Executor,
                          mMainThread: MainThread,
-                         val mCallback: HoleInteractor.Callback,
+                         val mCallback: GetHoles.Callback,
                          val mRepository: HoleRepository)
-    : AbsInteractor(mExecutor, mMainThread), HoleInteractor {
+    : AbsInteractor(mExecutor, mMainThread), GetHoles {
 
 
     override fun run() {
-        // Get Holes
         var holes: List<Hole> = mRepository.getHoles()
 
-//        if(holes.isEmpty()){
-//            mMainThread.post(Runnable { mCallback.onError() })
-//            return
-//        }
+        if(holes.isEmpty()){
+            mMainThread.post(Runnable { mCallback.onError("No holes found!") })
+            return
+        }
 
         mMainThread.post(Runnable { mCallback.onHolesLoaded(holes) })
     }

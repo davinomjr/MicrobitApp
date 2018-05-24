@@ -23,6 +23,7 @@ import android.widget.Toast
 
 import cin.ufpe.br.microbit_car_assist.R
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
+import cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleDetectorActivity
 import cin.ufpe.br.microbit_car_assist.storage.Database
 import com.bluetooth.mwoolley.microbitbledemo.Constants.TAG
 import com.bluetooth.mwoolley.microbitbledemo.Settings
@@ -36,6 +37,8 @@ import kotlinx.android.synthetic.main.fragment_main.view.*
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
+
+import com.bluetooth.mwoolley.microbitbledemo.*
 
 
 /**
@@ -118,19 +121,6 @@ class MainFragment : Fragment(), ScanResultsConsumer {
         }
     }
 
-    private fun addItem(view: View?){
-        lateinit var fakeHole: Hole
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            fakeHole = Hole(-8.1139178, -34.8976436, SimpleDateFormat("dd_MM_yy_HH_mm_ss").format(Date.from(Instant.now())))
-        }
-        else{
-            fakeHole = Hole(-8.1139178, -34.8976436, SimpleDateFormat("dd_MM_yy_HH_mm_ss").format(Calendar.getInstance().time))
-        }
-
-        val id: String = fakeHole.id
-        Database.it.child(id).setValue(fakeHole)
-    }
-
     private fun setHoleListener(){
         val holeListener = object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError?) {
@@ -192,6 +182,7 @@ class MainFragment : Fragment(), ScanResultsConsumer {
 
 
     private fun processItemClick(device: BluetoothDevice) {
+        Log.i(TAG, "clicked")
         if (ble_scanning) {
             ble_scanning = false
             ble_scanner.stopScanning()
@@ -199,15 +190,15 @@ class MainFragment : Fragment(), ScanResultsConsumer {
 
         if (device.bondState == BluetoothDevice.BOND_NONE && Settings.getInstance().isFilter_unpaired_devices) {
             device.createBond()
-            showMessage("Pairing Microbit ${device.name} now")
-            return
         }
 
-        // unregisterReceiver(broadcastReceiver)
-        // val microbit: MicroBit = MicroBit.getInstance()
-        // microbit.bluetooth_device = device
+        val microbit: MicroBit = MicroBit.getInstance()
+        microbit.bluetooth_device = device
 
-        // showMessage("Starting other activity...")
+        val intent = Intent(this.context, HoleDetectorActivity::class.java)
+        intent.putExtra("name", device.name)
+        intent.putExtra("address", device.address)
+        startActivity(intent)
     }
 
 

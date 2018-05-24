@@ -1,22 +1,14 @@
 package cin.ufpe.br.microbit_car_assist;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import cin.ufpe.br.microbit_car_assist.domain.entities.Hole;
 import cin.ufpe.br.microbit_car_assist.domain.executor.Executor;
 import cin.ufpe.br.microbit_car_assist.domain.executor.MainThread;
-import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleInteractor;
-import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleInteractorImpl;
+import cin.ufpe.br.microbit_car_assist.domain.interactor.GetHoles;
 import cin.ufpe.br.microbit_car_assist.storage.HoleRepository;
 import cin.ufpe.br.microbit_car_assist.storage.HoleRepositoryImpl;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -28,7 +20,7 @@ public class HoleTest {
     private HoleRepository mRepository;
     private Executor mExecutor;
     private MainThread mMainThread;
-    private HoleInteractor.Callback mCallback;
+    private GetHoles.Callback mCallback;
 
 
     public void startUp(){
@@ -46,7 +38,7 @@ public class HoleTest {
 //        when(mRepository.getHoles())
 //                .thenReturn(holes);
 //
-//        HoleInteractorImpl interactor = new HoleInteractorImpl(mExecutor, mMainThread, mCallback, mRepository);
+//        GetHolesInteractor interactor = new GetHolesInteractor(mExecutor, mMainThread, mCallback, mRepository);
 //
 //        interactor.run();
 //

@@ -68,7 +68,6 @@ class HoleMapFragment : Fragment(), OnMapReadyCallback, HolePresenter.View {
         Log.i(TAG, "onMapReady")
         mMap = googleMap
         mMapReady = true
-        //HoleRepository.getHoles({ setHoleMakerkers(it) })
     }
 
 

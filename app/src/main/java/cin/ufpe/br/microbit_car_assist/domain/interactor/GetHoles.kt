@@ -7,7 +7,7 @@ import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
  * at 05/17/2018 9:30 PM
  */
 
-interface HoleInteractor : Interactor {
+interface GetHoles : Interactor {
 
     interface Callback {
         fun onHolesLoaded(holes: List<Hole>)

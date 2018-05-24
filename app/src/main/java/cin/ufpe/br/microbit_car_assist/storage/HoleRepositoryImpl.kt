@@ -1,14 +1,16 @@
 package cin.ufpe.br.microbit_car_assist.storage
 
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
+import io.reactivex.Single
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
  * at 05/17/2018 9:40 PM
  */
 
-class HoleRepositoryImpl : HoleRepository{
+class HoleRepositoryImpl @Inject constructor() : HoleRepository{
 
     override fun addHole(hole: Hole) {
         val id: String = hole.id

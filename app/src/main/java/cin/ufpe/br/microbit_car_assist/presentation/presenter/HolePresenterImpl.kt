@@ -3,8 +3,8 @@ package cin.ufpe.br.microbit_car_assist.presentation.presenter
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import cin.ufpe.br.microbit_car_assist.domain.executor.Executor
 import cin.ufpe.br.microbit_car_assist.domain.executor.MainThread
-import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleInteractor
-import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleInteractorImpl
+import cin.ufpe.br.microbit_car_assist.domain.interactor.GetHoles
+import cin.ufpe.br.microbit_car_assist.domain.interactor.GetHolesInteractor
 import cin.ufpe.br.microbit_car_assist.storage.HoleRepositoryImpl
 
 /**
@@ -15,10 +15,10 @@ import cin.ufpe.br.microbit_car_assist.storage.HoleRepositoryImpl
 class HolePresenterImpl (mExecutor: Executor, mMainThread: MainThread, val mView: HolePresenter.View) :
         AbsPresenter(mExecutor, mMainThread),
         HolePresenter,
-        HoleInteractor.Callback {
+        GetHoles.Callback {
 
     override fun resume() {
-        val interactor: HoleInteractor = HoleInteractorImpl(mExecutor,mMainThread,this, HoleRepositoryImpl())
+        val interactor: GetHoles = GetHolesInteractor(mExecutor,mMainThread,this, HoleRepositoryImpl())
         interactor.execute()
     }
 
@@ -40,8 +40,8 @@ class HolePresenterImpl (mExecutor: Executor, mMainThread: MainThread, val mView
     }
 
     override fun onHolesLoaded(holes: List<Hole>) {
-        mView.showHolesOnMap(holes)
         mView.showLoading()
+        mView.showHolesOnMap(holes)
     }
 
 }

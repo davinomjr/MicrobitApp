@@ -1,5 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+project.ext {
+    daggerVersion = "2.13"
+    rxJavaVersion = "2.1.0"
+    rxAndroidVersion = "2.0.1"
+    butterKnifeVersion = "8.8.1"
+    archVersion = '1.0.0'
+}
 
 android {
     compileSdkVersion 26
@@ -20,6 +29,13 @@ android {
 }
 
 dependencies {
+    implementation "android.arch.lifecycle:runtime:1.1.1"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    kapt "android.arch.lifecycle:compiler:$project.archVersion"
+    implementation "android.arch.persistence.room:runtime:$project.archVersion"
+    kapt "android.arch.persistence.room:compiler:$project.archVersion"
+    implementation "android.arch.persistence.room:rxjava2:$project.archVersion"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.google.firebase:firebase-database:11.0.4'
@@ -32,7 +48,30 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5'
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.22.5"
     implementation "com.android.support:design:26.1.0"
+
+    // Dagger core
+    compile "com.google.dagger:dagger:$project.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$project.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$project.daggerVersion"
+
+    // Dagger Android
+    compile "com.google.dagger:dagger-android-support:$project.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$project.daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$project.daggerVersion"
+
+    //support libraries with dagger 2
+    compile "com.google.dagger:dagger-android-support:$project.daggerVersion"
+
+    // ReactiveX
+    compile "io.reactivex.rxjava2:rxjava:$project.rxJavaVersion"
+    compile "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
+
+    // ButterKnife
+    implementation "com.jakewharton:butterknife:$project.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$project.butterKnifeVersion"
 }
 repositories {
     mavenCentral()

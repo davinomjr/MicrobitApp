@@ -8,10 +8,10 @@ import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.MainFragment
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
- * at 05/14/2018 12:34 PM
+ * at 05/23/2018 12:41 PM
  */
 
-class PageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm)  {
+class MainPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm)  {
 
     override fun getItem(position: Int): Fragment {
         return when (position){
