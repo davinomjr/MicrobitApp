@@ -75,6 +75,9 @@ dependencies {
 
     // Location
     compile "com.google.android.gms:play-services-location:11.0.4"
+
+    // Anko
+    compile "org.jetbrains.anko:anko-commons:0.10.5"
 }
 repositories {
     mavenCentral()

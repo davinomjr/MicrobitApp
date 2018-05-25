@@ -72,11 +72,9 @@ class HoleMapFragment : Fragment(), OnMapReadyCallback, HolePresenter.View {
 
 
     override fun showLoading() {
-        ToastUtil.showMessage(this.context, "Getting holes...")
     }
 
     override fun hideLoading() {
-        ToastUtil.showMessage(this.context, "Finished getting holes!...")
     }
 
     override fun showError(error: String) {

@@ -50,23 +50,23 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
     private var serviceInitialized: Boolean = false
 
     val mServiceConnection = object : ServiceConnection {
-            override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
-                Log.i(TAG, "onServiceConnected")
-                Log.i(TAG, "Microbit connected = " + com.bluetooth.mwoolley.microbitbledemo.MicroBit.getInstance().isMicrobit_connected)
-                serviceInitialized = true
-                notifications_on = false
-                start_time = System.currentTimeMillis()
-                minute_number = 1
-                notification_count = 0
+        override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
+            Log.i(TAG, "onServiceConnected")
+            Log.i(TAG, "Microbit connected = " + com.bluetooth.mwoolley.microbitbledemo.MicroBit.getInstance().isMicrobit_connected)
+            serviceInitialized = true
+            notifications_on = false
+            start_time = System.currentTimeMillis()
+            minute_number = 1
+            notification_count = 0
 
-                bluetooth_le_adapter = (service as BleAdapterService.LocalBinder).service
-                bluetooth_le_adapter.setActivityHandler(mMessageHandler)
-                bluetooth_le_adapter.connect(MicroBit.getInstance().microbit_address)
-                bluetooth_le_adapter.readCharacteristic(Utility.normaliseUUID(BleAdapterService.ACCELEROMETERSERVICE_SERVICE_UUID), Utility.normaliseUUID(BleAdapterService.ACCELEROMETERPERIOD_CHARACTERISTIC_UUID))
-            }
-
-            override fun onServiceDisconnected(componentName: ComponentName) {}
+            bluetooth_le_adapter = (service as BleAdapterService.LocalBinder).service
+            bluetooth_le_adapter.setActivityHandler(mMessageHandler)
+            bluetooth_le_adapter.connect(MicroBit.getInstance().microbit_address)
+            bluetooth_le_adapter.readCharacteristic(Utility.normaliseUUID(BleAdapterService.ACCELEROMETERSERVICE_SERVICE_UUID), Utility.normaliseUUID(BleAdapterService.ACCELEROMETERPERIOD_CHARACTERISTIC_UUID))
         }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {}
+    }
 
 
     val mMessageHandler = @SuppressLint("HandlerLeak")
@@ -184,7 +184,7 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
                         roll = -1.0 * roll * (180.0 / Math.PI)
 
                         Log.i(TAG, "accelerometer data changed!")
-                        viewModel.accelerometerData.value = AccelerometerDataView(raw_x, raw_y, raw_z, pitch, roll)
+                        viewModel.accelerometerData.value = AccelerometerDataView(accel_output[0], accel_output[1], accel_output[2], pitch, roll)
                     }
                 }
                 BleAdapterService.GATT_REMOTE_RSSI -> {
@@ -202,14 +202,13 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
 
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate(){
-        val gattServiceIntent = Intent(context, BleAdapterService::class.java)
-        context.bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-    }
+    fun onCreate(){}
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy(){
-        context.unbindService(mServiceConnection)
+        if(serviceInitialized) {
+            context.unbindService(mServiceConnection)
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -220,5 +219,19 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
         }
     }
 
+    fun startListening(){
+        if(!serviceInitialized) {
+            val gattServiceIntent = Intent(context, BleAdapterService::class.java)
+            context.bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+            this.onStart()
+        }
+    }
 
+    fun stopListening(){
+        if(serviceInitialized){
+            bluetooth_le_adapter.disconnect()
+            context.unbindService(mServiceConnection)
+            serviceInitialized = false
+        }
+    }
 }

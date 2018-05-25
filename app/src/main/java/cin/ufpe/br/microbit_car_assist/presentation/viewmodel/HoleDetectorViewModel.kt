@@ -3,12 +3,14 @@ package cin.ufpe.br.microbit_car_assist.presentation.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import cin.ufpe.br.microbit_car_assist.domain.entities.AccelerometerData
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleDetected
 import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleDetector
 import cin.ufpe.br.microbit_car_assist.presentation.data.LocationLiveData
 import cin.ufpe.br.microbit_car_assist.util.Date
+import com.bluetooth.mwoolley.microbitbledemo.bluetooth.ConnectionStatusListener
 import com.davinomjr.base.viewmodel.BaseViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -22,7 +24,10 @@ import javax.inject.Inject
 class HoleDetectorViewModel
     @Inject constructor(val holeDetector: HoleDetector,
                         val holeDetected: HoleDetected)
-    : BaseViewModel() {
+    : BaseViewModel(),
+      ConnectionStatusListener{
+
+    private val TAG: String = HoleDetectorViewModel::class.java.simpleName
 
     var accelerometerData: MutableLiveData<AccelerometerDataView> = MutableLiveData()
     var lastDetectedHole: MutableLiveData<HoleView> = MutableLiveData()
@@ -47,6 +52,14 @@ class HoleDetectorViewModel
     fun handleHoleAdded(holeAdded: Hole){
         lastDetectedHole.value = HoleToView(holeAdded)
     }
+
+
+    override fun connectionStatusChanged(new_state: Boolean) {
+        if(new_state) Log.i(TAG, "Connection status changed to CONNECTED")
+        else Log.i(TAG, "Connection status changed to DISCONNECTED")
+    }
+
+    override fun serviceDiscoveryStatusChanged(new_state: Boolean) { }
 
     fun AccelerometerDataToView(data: AccelerometerData) = AccelerometerDataView(data.x,data.y,data.z,data.roll,data.pitch)
     fun AccelerometerDataViewToData(view: AccelerometerDataView) = AccelerometerData(view.x,view.y,view.z,view.roll,view.pitch)

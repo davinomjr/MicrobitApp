@@ -39,12 +39,14 @@ import java.time.Instant
 import java.util.*
 
 import com.bluetooth.mwoolley.microbitbledemo.*
+import com.davinomjr.base.ui.BaseFragment
+import kotlinx.android.synthetic.main.fragment_main.*
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class MainFragment : Fragment(), ScanResultsConsumer {
+class MainFragment : BaseFragment(), ScanResultsConsumer {
 
     lateinit var ble_device_list_adapter: ListAdapter
     lateinit var ble_scanner: BleScanner
@@ -52,14 +54,17 @@ class MainFragment : Fragment(), ScanResultsConsumer {
     val DEVICE_NAME_START: String = "BBC micro"
 
     private val ACCESS_COARSE_LOCATION_CODE = 123
+    private val WRITE_EXTERNAL_STORAGE_CODE = 124
+    private val PERMISSIONS_CODE = 15
     private var device_count: Int = 0
     private val SCAN_TIMEOUT: Long = 30000
-
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val rootView = inflater!!.inflate(R.layout.fragment_main, container, false)
         Settings.getInstance().restore(this.context)
+
+        checkPermissions()
 
         rootView.scanButton.setOnClickListener({ view: View? -> scan(view) })
         ble_device_list_adapter = ListAdapter(mutableListOf(), { device: BluetoothDevice ->
@@ -80,14 +85,13 @@ class MainFragment : Fragment(), ScanResultsConsumer {
         return rootView
     }
 
-
     val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context?, intent: Intent?) {
             val action: String = intent!!.action
             if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
                 val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                 when (device.bondState) {
-                    BluetoothDevice.BOND_NONE -> showMessage("Device not pairead successfully")
+                    BluetoothDevice.BOND_NONE -> showMessage("Device not paired successfully")
                     BluetoothDevice.BOND_BONDING -> showMessage("Pairing in progress")
                     BluetoothDevice.BOND_BONDED -> showMessage("Paired successfully")
                 }
@@ -99,23 +103,34 @@ class MainFragment : Fragment(), ScanResultsConsumer {
         Toast.makeText(this.context, message, Toast.LENGTH_LONG).show()
     }
 
-    fun checkPermission(): Boolean {
-        val permission = ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this.activity,
-                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                    ACCESS_COARSE_LOCATION_CODE)
-            return false
+    fun hasNecessaryPermissions() = hasPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+
+    fun hasPermissions(permissions: Array<String>) : Boolean {
+        for(permission: String in permissions){
+            if(ContextCompat.checkSelfPermission(this.context, permission) != PackageManager.PERMISSION_GRANTED){
+                return false
+            }
         }
 
         return true
     }
 
+    fun checkPermissions() : Boolean {
+        val permissions = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if(hasPermissions(permissions)){
+            return true
+        }
+
+        requestPermissions(permissions, PERMISSIONS_CODE)
+        return false
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        Log.i(TAG, "onRequestPermissionsResult")
         when (requestCode) {
-            ACCESS_COARSE_LOCATION_CODE -> {
+            PERMISSIONS_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    showMessage("The application cannot run properly unless the requested permission is granted. Please try again.")
+                    showMessage("The application cannot run properly unless the requested permissions are granted. Please try again.")
                 }
             }
         }
@@ -147,13 +162,18 @@ class MainFragment : Fragment(), ScanResultsConsumer {
     private fun scan(view: View?) {
         if (!ble_scanner.isScanning) {
             device_count = 0
-            if (checkPermission()) {
+            if (hasNecessaryPermissions()) {
+                scanButton.text = "Stop scanning"
+                showMessage("Scanning for paired Microbit devices")
                 startScan()
             }
+            else{
+                checkPermissions()
+            }
         } else {
+            scanButton.text = "Start scanning"
             ble_scanner.stopScanning()
             showMessage("Stopped scanning")
-
         }
     }
 
