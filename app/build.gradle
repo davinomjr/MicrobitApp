@@ -72,6 +72,9 @@ dependencies {
     // ButterKnife
     implementation "com.jakewharton:butterknife:$project.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$project.butterKnifeVersion"
+
+    // Location
+    compile "com.google.android.gms:play-services-location:11.0.4"
 }
 repositories {
     mavenCentral()

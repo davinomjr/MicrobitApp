@@ -14,6 +14,7 @@ import javax.inject.Inject
 class HoleDetector
 @Inject constructor()
     : UseCase<HoleDetector.HoleDetectorResult, AccelerometerData>() {
+
     override suspend fun run(params: AccelerometerData): Either<Failure, HoleDetector.HoleDetectorResult> {
         // Algorithm to detect if it is a role
         val result = HoleDetectorResult(true, params)
