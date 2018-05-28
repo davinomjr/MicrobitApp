@@ -10,10 +10,12 @@ import cin.ufpe.br.microbit_car_assist.presentation.ui.adapter.HoleDetectorPageA
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleDetectingFragment
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleMapFragment
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.MainFragment
+import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleDetectorViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import com.bluetooth.mwoolley.microbitbledemo.*
+import com.davinomjr.extension.viewModel
 
-class HoleDetectorActivity : AppCompatActivity() {
+class HoleDetectorActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

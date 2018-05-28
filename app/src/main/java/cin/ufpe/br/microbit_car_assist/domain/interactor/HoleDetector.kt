@@ -15,10 +15,18 @@ class HoleDetector
 @Inject constructor()
     : UseCase<HoleDetector.HoleDetectorResult, AccelerometerData>() {
 
-    override suspend fun run(params: AccelerometerData): Either<Failure, HoleDetector.HoleDetectorResult> {
+    private val ACCEL_Z_THRESHOLD = 0.42
+
+    override suspend fun run(data: AccelerometerData): Either<Failure, HoleDetector.HoleDetectorResult> {
         // Algorithm to detect if it is a role
-        val result = HoleDetectorResult(true, params)
-        return Either.Right(result)
+        val detectorResult = if(data.accel_z <= ACCEL_Z_THRESHOLD){
+            HoleDetectorResult(true, data)
+        }
+        else{
+            HoleDetectorResult(false, data)
+        }
+
+        return Either.Right(detectorResult)
     }
 
     data class HoleDetectorResult(val isHole: Boolean = false, val data: AccelerometerData)

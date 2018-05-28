@@ -5,7 +5,7 @@
     <string name="title_activity_hole_map">Map</string>
     <string name="no_holes">No holes found</string>
     <string name="title_activity_maps">Map</string>
+    <string name="start_detecting">Start detecting</string>
+    <string name="stop_detecting">Stop detecting</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

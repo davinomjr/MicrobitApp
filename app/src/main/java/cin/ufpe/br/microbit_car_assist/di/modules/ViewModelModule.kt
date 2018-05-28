@@ -8,6 +8,7 @@ import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HolesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import javax.inject.Singleton
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
@@ -27,5 +28,6 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(HoleDetectorViewModel::class)
+    @Singleton
     abstract fun bindHoleDetectorViewModel(holeDetectorViewModel: HoleDetectorViewModel): ViewModel
 }

@@ -3,6 +3,7 @@ package cin.ufpe.br.microbit_car_assist.presentation.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
+import cin.ufpe.br.microbit_car_assist.domain.interactor.GetHoles
 import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleDetected
 import com.davinomjr.base.viewmodel.BaseViewModel
 import kotlinx.coroutines.experimental.handleCoroutineException
@@ -14,14 +15,15 @@ import javax.inject.Inject
  */
 
 class HolesViewModel
-@Inject constructor(private val holeDetected: HoleDetected) : BaseViewModel() {
+@Inject constructor(private val getHoles: GetHoles) : BaseViewModel() {
 
-    var hole: MutableLiveData<HoleView> = MutableLiveData()
-
-    fun addHole(hole: Hole) = holeDetected.execute({ it.either(::handleFailure, ::handleHoleDetected) }, hole)
-
-    fun handleHoleDetected(hole: Hole) {
-        this.hole.value = HoleView(hole.latitude,hole.longitude,hole.date)
+    fun getHoles(callback: (holes: List<HoleView>) -> Unit){
+        return getHoles.execute({it.either(::handleFailure, {})}, {
+            holes -> callback(convertToHoleViewList(holes))
+        })
     }
 
+    fun convertToHoleViewList(holes: List<Hole?>) : List<HoleView>{
+        return holes.map{ hole -> HoleView(hole!!.latitude,hole!!.longitude,hole!!.date)}
+    }
 }

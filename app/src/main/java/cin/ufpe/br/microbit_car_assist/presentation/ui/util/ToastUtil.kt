@@ -1,4 +1,4 @@
-package cin.ufpe.br.microbit_car_assist.presentation.ui
+package cin.ufpe.br.microbit_car_assist.presentation.ui.util
 
 import android.app.Activity
 import android.content.Context

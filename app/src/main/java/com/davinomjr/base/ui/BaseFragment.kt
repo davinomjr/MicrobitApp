@@ -18,14 +18,13 @@ import javax.inject.Inject
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
  * at 05/23/2018 12:43 PM
  */
-
 abstract class BaseFragment : Fragment(), LifecycleObserver {
+
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     val appComponent: AppComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (activity?.application as App).component
     }
-
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -3,6 +3,7 @@ package cin.ufpe.br.microbit_car_assist.presentation.ui.adapter
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleMainMapFragment
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleMapFragment
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.MainFragment
 
@@ -16,7 +17,7 @@ class MainPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm)  {
     override fun getItem(position: Int): Fragment {
         return when (position){
             0 -> { MainFragment() }
-            1 -> { HoleMapFragment() }
+            1 -> { HoleMainMapFragment() }
             else -> { TODO("No other fragment to return ") }
         }
     }

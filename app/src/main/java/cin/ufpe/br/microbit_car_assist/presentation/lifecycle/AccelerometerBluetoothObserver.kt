@@ -28,8 +28,7 @@ import com.bluetooth.mwoolley.microbitbledemo.bluetooth.BleAdapterService
 
 class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val context: Context) : LifecycleObserver {
 
-    private val TAG: String = "AccelerometerBluetoothObserver"
-
+    private val TAG: String = AccelerometerBluetoothObserver::class.java.simpleName
     private lateinit var bluetooth_le_adapter: BleAdapterService
 
     //// Original implementation, did not botter to refactoring (at this time)
@@ -182,8 +181,6 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
                         //convert radians into degrees
                         pitch = pitch * (180.0 / Math.PI)
                         roll = -1.0 * roll * (180.0 / Math.PI)
-
-                        Log.i(TAG, "accelerometer data changed!")
                         viewModel.accelerometerData.value = AccelerometerDataView(accel_output[0], accel_output[1], accel_output[2], pitch, roll)
                     }
                 }

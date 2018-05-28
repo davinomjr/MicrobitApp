@@ -78,6 +78,12 @@ dependencies {
 
     // Anko
     compile "org.jetbrains.anko:anko-commons:0.10.5"
+
+    // Joda-Time
+    compile group: 'joda-time', name: 'joda-time', version: '2.3'
+
+    // Android Maps Utils
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
 }
 repositories {
     mavenCentral()

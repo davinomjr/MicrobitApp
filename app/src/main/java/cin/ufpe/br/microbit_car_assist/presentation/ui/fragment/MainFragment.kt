@@ -7,10 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,7 +19,6 @@ import android.widget.TextView
 import android.widget.Toast
 
 import cin.ufpe.br.microbit_car_assist.R
-import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleDetectorActivity
 import cin.ufpe.br.microbit_car_assist.storage.Database
 import com.bluetooth.mwoolley.microbitbledemo.Constants.TAG
@@ -34,17 +30,12 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import kotlinx.android.synthetic.main.fragment_main.view.*
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.util.*
-
 import com.bluetooth.mwoolley.microbitbledemo.*
 import com.davinomjr.base.ui.BaseFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 
-
 /**
- * A simple [Fragment] subclass.
+ * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
  */
 class MainFragment : BaseFragment(), ScanResultsConsumer {
 

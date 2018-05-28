@@ -3,6 +3,7 @@ package cin.ufpe.br.microbit_car_assist.presentation.ui.fragment
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 
 import cin.ufpe.br.microbit_car_assist.R
-import cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleDetectorActivity
 import cin.ufpe.br.microbit_car_assist.presentation.ui.entities.HoleMarker
 import cin.ufpe.br.microbit_car_assist.presentation.ui.util.ToastUtil
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleDetectorViewModel
@@ -25,6 +25,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.ClusterManager
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,27 +36,12 @@ import javax.inject.Singleton
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
  */
-class HoleMapFragment : BaseHoleMapFragment() {
+class HoleMainMapFragment : BaseHoleMapFragment() {
 
-    lateinit var holeDetectorViewModel: HoleDetectorViewModel
-
-    private val TAG: String = HoleMapFragment::class.java.simpleName
+    private val TAG: String = HoleMainMapFragment::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i(TAG, "onCreate")
         super.onCreate(savedInstanceState)
-        holeDetectorViewModel = viewModel()
-        holeDetectorViewModel.lastDetectedHole.observe(this, Observer{ hole -> addHoleOnMap(hole!!)})
-    }
-
-    override fun onResume() {
-        Log.i(TAG, "onResume")
-        super.onResume()
-    }
-
-    fun addHoleOnMap(hole: HoleView){
-        Log.i(TAG, "addHoleOnMap")
-        addMarker(hole.latitude,hole.longitude, hole.date)
-        moveCamera(LatLng(hole.latitude,hole.longitude), 15f)
     }
 }

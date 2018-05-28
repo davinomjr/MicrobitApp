@@ -1,13 +1,8 @@
 package cin.ufpe.br.microbit_car_assist.presentation.ui.fragment
 
 import android.arch.lifecycle.Observer
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.LiveFolders.INTENT
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -15,11 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.ToggleButton
 
 import cin.ufpe.br.microbit_car_assist.R
 import cin.ufpe.br.microbit_car_assist.presentation.data.LocationLiveData
 import cin.ufpe.br.microbit_car_assist.presentation.lifecycle.AccelerometerBluetoothObserver
+import cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleDetectorActivity
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleDetectorViewModel
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HolesViewModel
 import cin.ufpe.br.microbit_car_assist.util.Date
@@ -28,33 +23,27 @@ import com.davinomjr.base.ui.BaseFragment
 import com.davinomjr.extension.viewModel
 import kotlinx.android.synthetic.main.fragment_hole_detecting.*
 import kotlinx.android.synthetic.main.fragment_hole_detecting.view.*
-import org.jetbrains.anko.email
 import java.io.File
-import java.io.FileOutputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
 /**
- * A simple [Fragment] subclass.
+ * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
  */
 class HoleDetectingFragment : BaseFragment() {
 
     private val TAG = "HoleDetectingFragment"
 
-    @Inject lateinit var holeViewModel: HolesViewModel
-    @Inject lateinit var holeDetectorViewModel: HoleDetectorViewModel
+    private lateinit var holeViewModel: HolesViewModel
+    private lateinit var holeDetectorViewModel: HoleDetectorViewModel
 
     private lateinit var holeDetectingObserver: AccelerometerBluetoothObserver
     private lateinit var locationData: LocationLiveData
 
     private var detecting = false
 
-
-    // Remove later
     lateinit var data_adapter: ListAdapter
-
-    var holeMode: Boolean = false
-    private lateinit var logDir: File
     private var currentStream: String = ""
 
 
@@ -65,44 +54,19 @@ class HoleDetectingFragment : BaseFragment() {
 
         holeViewModel = viewModel()
         holeDetectorViewModel = viewModel()
+
         locationData = LocationLiveData(this.activity)
 
-        holeDetectorViewModel.accelerometerData.observe(this, Observer { data ->
-            var dataText = data.toString()
-            dataText += if(holeMode) " Buraco = 1" else " Buraco = 0"
-
-            data_adapter.data.add(dataText)
-            data_adapter.notifyDataSetChanged()
-
-            currentStream += "${dataText}\n"
-            accelerometerData.smoothScrollToPosition(data_adapter.itemCount)
-
-            holeDetectorViewModel.handleAccelerometerChange(holeDetectorViewModel.AccelerometerDataViewToData(data!!))
-        })
-
-        holeDetectorViewModel.lastDetectedHole.observe(this, Observer{hole ->
-            // TODO(Mark on map)
-        })
-
-        locationData.observe(this, Observer { location ->
-            holeDetectorViewModel.lastKnownLocation = location
-        })
-
         holeDetectingObserver = AccelerometerBluetoothObserver(holeDetectorViewModel, this.context)
+        this.lifecycle.addObserver(holeDetectingObserver)
+
+        configObservers()
 
         val intent = this.activity.getIntent()
         MicroBit.getInstance().microbit_name = intent.getStringExtra("name")
         MicroBit.getInstance().microbit_address = intent.getStringExtra("address")
         MicroBit.getInstance().connection_status_listener = holeDetectorViewModel
-
-        this.lifecycle.addObserver(holeDetectingObserver)
-
-        logDir = File("/DCIM", "Logs_Microbit_Car")
-        Log.i(TAG, "TRYING TO CREATE DIR = $logDir")
-        logDir.mkdirs()
-
     }
-
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater!!.inflate(R.layout.fragment_hole_detecting, container, false)
@@ -110,27 +74,43 @@ class HoleDetectingFragment : BaseFragment() {
         data_adapter = ListAdapter(mutableListOf())
         rootView.accelerometerData.layoutManager = LinearLayoutManager(rootView.context)
         rootView.accelerometerData.adapter = data_adapter
-
-        rootView.holeButtonMode.setOnClickListener({ t -> holeMode = t.isEnabled })
         return rootView
+    }
+
+    fun configObservers(){
+        holeDetectorViewModel.accelerometerData.observe(this, Observer { data ->
+            val dataText = data.toString()
+            Log.i(TAG, "Detected acceelerometer change: $dataText")
+
+//            data_adapter.data.add(dataText)
+//            data_adapter.notifyDataSetChanged()
+//            accelerometerData.smoothScrollToPosition(data_adapter.itemCount)
+
+            currentStream += "$dataText\n"
+
+            holeDetectorViewModel.handleAccelerometerChange(holeDetectorViewModel.AccelerometerDataViewToData(data!!))
+        })
+
+        locationData.observe(this, Observer { location ->
+            holeDetectorViewModel.lastKnownLocation = location
+        })
     }
 
     fun handleDetectingButtonClick(view: View?){
         if(detecting){
-            Log.i(TAG, "stop listening")
+            Log.i(TAG, "Stopped listening")
             holeDetectingObserver.stopListening()
-            startStopDetecting.text = "Start detecting"
-            val nowDate: String = Date.now()
+            startStopDetecting.text = getString(R.string.start_detecting)
+            val nowDate: String = Date.nowAsString()
             val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "LogMicrobit_$nowDate.txt")
             file.appendText(currentStream)
-
-            this.activity.email("vhssa@cin.ufpe.br", "Log gerado pelo Microbit Car Assist", currentStream)
+            currentStream = ""
         }
         else{
-            Log.i(TAG, "start listening")
+            Log.i(TAG, "Started listening")
             currentStream = ""
             holeDetectingObserver.startListening()
-            startStopDetecting.text = "Stop detecting"
+            startStopDetecting.text = getString(R.string.stop_detecting)
         }
 
         detecting = !detecting
@@ -152,8 +132,6 @@ class ListAdapter(var data: MutableList<String>) : RecyclerView.Adapter<ListAdap
     override fun getItemCount(): Int = data.size
 
     fun contains(data: String) = data.contains(data)
-
-    fun getDevice(position: Int) = data[position]
 
     class ViewHolder(val containerView: View)
         : RecyclerView.ViewHolder(containerView) {

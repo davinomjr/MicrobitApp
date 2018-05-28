@@ -4,6 +4,7 @@ package com.davinomjr.extension
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import cin.ufpe.br.microbit_car_assist.presentation.ui.activity.BaseActivity
 import com.davinomjr.base.ui.BaseFragment
 
 /**

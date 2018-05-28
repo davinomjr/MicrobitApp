@@ -10,5 +10,5 @@ import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 interface HoleRepository  {
 
     fun addHole(hole: Hole)
-    fun getHoles() : List<Hole>
+    fun getHoles(callback: (holes: List<Hole?>) -> Unit)
 }

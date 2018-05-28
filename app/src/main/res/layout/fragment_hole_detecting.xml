@@ -23,14 +23,6 @@
             android:theme="@style/DarkButton"
             android:text="Start detecting" />
 
-        <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/holeButtonMode"
-            android:theme="@style/DarkButton"
-            />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/accelerometerData"
             android:layout_width="250dp"
