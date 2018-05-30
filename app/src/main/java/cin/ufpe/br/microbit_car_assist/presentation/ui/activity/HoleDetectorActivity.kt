@@ -21,7 +21,7 @@ class HoleDetectorActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hole_detector)
 
-        viewpager_main.adapter = HoleDetectorPageAdapter(supportFragmentManager)
+        viewpager_main.adapter = HoleDetectorPageAdapter(supportFragmentManager, this)
         tabs_main.setupWithViewPager(viewpager_main)
     }
 }

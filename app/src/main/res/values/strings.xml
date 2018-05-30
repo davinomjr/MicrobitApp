@@ -1,11 +1,23 @@
 <resources>
-    <string name="app_name">Microbit Car Assist</string>
-    <string name="find_microbit">Find Microbits</string>
-    <string name="main_activity_title">Microbit Car Assist</string>
+    <string name="app_name" translatable="false">Microbit Car Assist</string>
+    <string name="find_microbit">Find Microbit</string>
+    <string name="main_activity_title" translatable="false">Microbit Car Assist</string>
     <string name="title_activity_hole_map">Map</string>
     <string name="no_holes">No holes found</string>
     <string name="title_activity_maps">Map</string>
     <string name="start_detecting">Start detecting</string>
     <string name="stop_detecting">Stop detecting</string>
-
+    <string name="start_scanning">Start scanning</string>
+    <string name="stop_scanning">Stop scanning</string>
+    <string name="scanning_started">Scanning for Microbit devices nearby...</string>
+    <string name="scanning_stopped">Stopped scanning</string>
+    <string name="permission_error">The application cannot run properly unless the requested permissions are granted. Please try again.</string>
+    <string name="microbit_pairing_request">Before using this app, you need to pair your device with the Microbit board. Instructions for the pairing process can be found on the micro:bit app, by Samsung.</string>
+    <string name="starting_hole_detction">Starting hole detection</string>
+    <string name="wait_time_detect">Starting hole detection. It can take 5 to 10 seconds to start detecting, please wait.</string>
+    <string name="detection_started">Detection started</string>
+    <string name="detection_stopped">Detection stopped</string>
+    <string name="detecting_title">Detecting</string>
+    <string name="hole_map_title">Holes</string>
+    <string name="microbit" translatable="false">Microbit</string>
 </resources>

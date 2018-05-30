@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import cin.ufpe.br.microbit_car_assist.R
 import cin.ufpe.br.microbit_car_assist.presentation.ui.entities.HoleMarker
-import cin.ufpe.br.microbit_car_assist.presentation.ui.util.ToastUtil
+import cin.ufpe.br.microbit_car_assist.presentation.ui.util.MessageUtil
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleView
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HolesViewModel
 import com.davinomjr.base.ui.BaseFragment
@@ -17,9 +17,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.clustering.ClusterManager
-import com.google.maps.android.clustering.algo.Algorithm
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -103,7 +101,7 @@ abstract class BaseHoleMapFragment : BaseFragment(), OnMapReadyCallback {
                 holes.forEach { hole: HoleView -> addMarker(hole.latitude,hole.longitude,hole.date) }
                 moveCamera(LatLng(holes.last().latitude, holes.last().longitude), 15f, 3000)
             } else {
-                ToastUtil.showMessage(this.context, getString(R.string.no_holes))
+                MessageUtil.showSnack(this.view!!, getString(R.string.no_holes))
             }
         }
         else{

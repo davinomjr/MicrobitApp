@@ -1,31 +1,35 @@
 package cin.ufpe.br.microbit_car_assist.presentation.ui.fragment
 
+import android.app.ProgressDialog
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.transition.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 
 import cin.ufpe.br.microbit_car_assist.R
 import cin.ufpe.br.microbit_car_assist.presentation.data.LocationLiveData
 import cin.ufpe.br.microbit_car_assist.presentation.lifecycle.AccelerometerBluetoothObserver
-import cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleDetectorActivity
+import cin.ufpe.br.microbit_car_assist.presentation.ui.entities.HoleLocation
+import cin.ufpe.br.microbit_car_assist.presentation.ui.util.MessageUtil
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleDetectorViewModel
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HolesViewModel
 import cin.ufpe.br.microbit_car_assist.util.Date
 import com.bluetooth.mwoolley.microbitbledemo.MicroBit
 import com.davinomjr.base.ui.BaseFragment
 import com.davinomjr.extension.viewModel
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_hole_detecting.*
 import kotlinx.android.synthetic.main.fragment_hole_detecting.view.*
+import org.jetbrains.anko.progressDialog
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -42,9 +46,9 @@ class HoleDetectingFragment : BaseFragment() {
     private lateinit var locationData: LocationLiveData
 
     private var detecting = false
-
-    lateinit var data_adapter: ListAdapter
     private var currentStream: String = ""
+
+    lateinit var dialog: ProgressDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +64,7 @@ class HoleDetectingFragment : BaseFragment() {
         holeDetectingObserver = AccelerometerBluetoothObserver(holeDetectorViewModel, this.context)
         this.lifecycle.addObserver(holeDetectingObserver)
 
-        configObservers()
+        setupObservers()
 
         val intent = this.activity.getIntent()
         MicroBit.getInstance().microbit_name = intent.getStringExtra("name")
@@ -71,35 +75,28 @@ class HoleDetectingFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater!!.inflate(R.layout.fragment_hole_detecting, container, false)
         rootView.startStopDetecting.setOnClickListener(::handleDetectingButtonClick)
-        data_adapter = ListAdapter(mutableListOf())
-        rootView.accelerometerData.layoutManager = LinearLayoutManager(rootView.context)
-        rootView.accelerometerData.adapter = data_adapter
         return rootView
     }
 
-    fun configObservers(){
+    fun setupObservers(){
         holeDetectorViewModel.accelerometerData.observe(this, Observer { data ->
             val dataText = data.toString()
             Log.i(TAG, "Detected acceelerometer change: $dataText")
-
-//            data_adapter.data.add(dataText)
-//            data_adapter.notifyDataSetChanged()
-//            accelerometerData.smoothScrollToPosition(data_adapter.itemCount)
-
             currentStream += "$dataText\n"
-
             holeDetectorViewModel.handleAccelerometerChange(holeDetectorViewModel.AccelerometerDataViewToData(data!!))
         })
 
         locationData.observe(this, Observer { location ->
-            holeDetectorViewModel.lastKnownLocation = location
+            if(location != null) holeDetectorViewModel.lastKnownLocation = HoleLocation(location.latitude,location.longitude)
         })
     }
 
     fun handleDetectingButtonClick(view: View?){
         if(detecting){
             Log.i(TAG, "Stopped listening")
+            MessageUtil.showSnack(this.view!!, getString(R.string.detection_stopped))
             holeDetectingObserver.stopListening()
+            spin_loading.visibility = View.INVISIBLE
             startStopDetecting.text = getString(R.string.start_detecting)
             val nowDate: String = Date.nowAsString()
             val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "LogMicrobit_$nowDate.txt")
@@ -111,33 +108,21 @@ class HoleDetectingFragment : BaseFragment() {
             currentStream = ""
             holeDetectingObserver.startListening()
             startStopDetecting.text = getString(R.string.stop_detecting)
+
+            dialog = ProgressDialog(this.activity)
+            dialog.setCancelable(false)
+            dialog.setMessage(getString(R.string.wait_time_detect))
+            dialog.show()
+            Observable.timer(12, TimeUnit.SECONDS)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        dialog.cancel()
+                        MessageUtil.showSnack(this.view!!, getString(R.string.detection_started))
+                        spin_loading.visibility = View.VISIBLE
+                    })
         }
 
         detecting = !detecting
-    }
-}
-
-
-class ListAdapter(var data: MutableList<String>) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_row, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(data[position])
-    }
-
-    override fun getItemCount(): Int = data.size
-
-    fun contains(data: String) = data.contains(data)
-
-    class ViewHolder(val containerView: View)
-        : RecyclerView.ViewHolder(containerView) {
-
-        fun bind(data: String){
-            containerView.findViewById<TextView>(R.id.textView).text = data
-        }
     }
 }

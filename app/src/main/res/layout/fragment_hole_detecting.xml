@@ -2,34 +2,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
     tools:context="cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleDetectingFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:src="@drawable/microbit" />
+    <ImageView
+        android:id="@+id/microbit_image"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="80dp"
+        android:src="@drawable/microbit" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/startStopDetecting"
-            android:layout_gravity="center"
-            android:theme="@style/DarkButton"
-            android:text="Start detecting" />
+    <Button
+        android:id="@+id/startStopDetecting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/microbit_image"
+        android:layout_centerHorizontal="true"
+        android:text="@string/start_detecting"
+        android:theme="@style/DarkButton" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/accelerometerData"
-            android:layout_width="250dp"
-            android:layout_height="210dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:clipToPadding="true" />
-    </LinearLayout>
-
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_loading"
+        android:visibility="invisible"
+        android:layout_marginTop="20dp"
+        style="@style/SpinKitView.Large.DoubleBounce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startStopDetecting"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        app:SpinKit_Color="@color/colorPrimary" />
 </RelativeLayout>

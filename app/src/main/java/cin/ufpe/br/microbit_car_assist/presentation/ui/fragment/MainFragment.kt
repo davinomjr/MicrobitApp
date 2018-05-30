@@ -20,6 +20,7 @@ import android.widget.Toast
 
 import cin.ufpe.br.microbit_car_assist.R
 import cin.ufpe.br.microbit_car_assist.presentation.ui.activity.HoleDetectorActivity
+import cin.ufpe.br.microbit_car_assist.presentation.ui.util.MessageUtil
 import cin.ufpe.br.microbit_car_assist.storage.Database
 import com.bluetooth.mwoolley.microbitbledemo.Constants.TAG
 import com.bluetooth.mwoolley.microbitbledemo.Settings
@@ -33,6 +34,9 @@ import kotlinx.android.synthetic.main.fragment_main.view.*
 import com.bluetooth.mwoolley.microbitbledemo.*
 import com.davinomjr.base.ui.BaseFragment
 import kotlinx.android.synthetic.main.fragment_main.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.yesButton
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
@@ -43,9 +47,6 @@ class MainFragment : BaseFragment(), ScanResultsConsumer {
     lateinit var ble_scanner: BleScanner
     var ble_scanning: Boolean = false
     val DEVICE_NAME_START: String = "BBC micro"
-
-    private val ACCESS_COARSE_LOCATION_CODE = 123
-    private val WRITE_EXTERNAL_STORAGE_CODE = 124
     private val PERMISSIONS_CODE = 15
     private var device_count: Int = 0
     private val SCAN_TIMEOUT: Long = 30000
@@ -71,9 +72,12 @@ class MainFragment : BaseFragment(), ScanResultsConsumer {
         ble_scanner.device_name_start = DEVICE_NAME_START
         ble_scanner.isSelect_bonded_devices_only = true
 
-        setHoleListener()
-
+        showPairingRationale()
         return rootView
+    }
+
+    fun showPairingRationale(){
+        MessageUtil.showAlert(this.activity, getString(R.string.microbit_pairing_request), {})
     }
 
     val broadcastReceiver = object : BroadcastReceiver() {
@@ -91,7 +95,7 @@ class MainFragment : BaseFragment(), ScanResultsConsumer {
     }
 
     fun showMessage(message: String) {
-        Toast.makeText(this.context, message, Toast.LENGTH_LONG).show()
+        MessageUtil.showSnack(this.view!!, message)
     }
 
     fun hasNecessaryPermissions() = hasPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -121,56 +125,33 @@ class MainFragment : BaseFragment(), ScanResultsConsumer {
         when (requestCode) {
             PERMISSIONS_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    showMessage("The application cannot run properly unless the requested permissions are granted. Please try again.")
+                    showMessage(getString(R.string.permission_error))
                 }
             }
         }
     }
 
-    private fun setHoleListener(){
-        val holeListener = object : ChildEventListener {
-            override fun onCancelled(p0: DatabaseError?) {
-            }
-
-            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {
-            }
-
-            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot?) {
-            }
-
-            override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
-                Log.i(TAG, "Hole added")
-            }
-
-        }
-
-        Database.it.addChildEventListener(holeListener)
-    }
 
     private fun scan(view: View?) {
         if (!ble_scanner.isScanning) {
             device_count = 0
             if (hasNecessaryPermissions()) {
-                scanButton.text = "Stop scanning"
-                showMessage("Scanning for paired Microbit devices")
+                scanButton.text = getString(R.string.stop_scanning)
                 startScan()
             }
             else{
                 checkPermissions()
             }
         } else {
-            scanButton.text = "Start scanning"
+            scanButton.text = getString(R.string.start_scanning)
             ble_scanner.stopScanning()
-            showMessage("Stopped scanning")
+            showMessage(getString(R.string.scanning_stopped))
         }
     }
 
 
     fun startScan() {
-        showMessage("Scanning for Microbit devices nearby...")
+        showMessage(getString(R.string.scanning_started))
         ble_scanner.startScanning(this, SCAN_TIMEOUT)
     }
 
@@ -230,8 +211,6 @@ class MainFragment : BaseFragment(), ScanResultsConsumer {
         override fun getItemCount(): Int = ble_devices.size
 
         fun contains(device: BluetoothDevice) = ble_devices.contains(device)
-
-        fun getDevice(position: Int) = ble_devices[position]
 
         class ViewHolder(val containerView: View)
             : RecyclerView.ViewHolder(containerView) {

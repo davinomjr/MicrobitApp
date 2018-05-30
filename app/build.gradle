@@ -7,7 +7,9 @@ project.ext {
     rxJavaVersion = "2.1.0"
     rxAndroidVersion = "2.0.1"
     butterKnifeVersion = "8.8.1"
-    archVersion = '1.0.0'
+    archVersion = "1.0.0"
+    ankoVersion = "0.10.5"
+    jodaTimeVersion = "2.3"
 }
 
 android {
@@ -77,13 +79,17 @@ dependencies {
     compile "com.google.android.gms:play-services-location:11.0.4"
 
     // Anko
-    compile "org.jetbrains.anko:anko-commons:0.10.5"
+    compile "org.jetbrains.anko:anko-commons:$project.ankoVersion"
+    compile "org.jetbrains.anko:anko-design:$project.ankoVersion"
 
     // Joda-Time
-    compile group: 'joda-time', name: 'joda-time', version: '2.3'
+    compile group: "joda-time", name: "joda-time", version: "$project.jodaTimeVersion"
 
     // Android Maps Utils
-    compile 'com.google.maps.android:android-maps-utils:0.5+'
+    compile 'com.google.maps.android:android-maps-utils:0.5'
+
+    //Android-SpinKit
+    compile 'com.github.ybq:Android-SpinKit:1.1.0'
 }
 repositories {
     mavenCentral()

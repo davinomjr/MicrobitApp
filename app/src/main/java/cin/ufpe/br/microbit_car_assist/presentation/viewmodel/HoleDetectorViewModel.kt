@@ -2,14 +2,12 @@ package cin.ufpe.br.microbit_car_assist.presentation.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.location.Location
-import android.os.Build
-import android.support.annotation.RequiresApi
 import android.util.Log
 import cin.ufpe.br.microbit_car_assist.domain.entities.AccelerometerData
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
-import cin.ufpe.br.microbit_car_assist.domain.interactor.GetHoles
 import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleDetected
 import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleDetector
+import cin.ufpe.br.microbit_car_assist.presentation.ui.entities.HoleLocation
 import cin.ufpe.br.microbit_car_assist.util.Date
 import com.bluetooth.mwoolley.microbitbledemo.bluetooth.ConnectionStatusListener
 import com.davinomjr.base.viewmodel.BaseViewModel
@@ -26,7 +24,7 @@ import javax.inject.Singleton
 
 class HoleDetectorViewModel
     @Inject constructor(val holeDetector: HoleDetector,
-                                   val holeDetected: HoleDetected)
+                        val holeDetected: HoleDetected)
     : BaseViewModel(),
       ConnectionStatusListener{
 
@@ -34,7 +32,7 @@ class HoleDetectorViewModel
 
     var accelerometerData: MutableLiveData<AccelerometerDataView> = MutableLiveData()
     var lastDetectedHole: MutableLiveData<HoleView> = MutableLiveData()
-    var lastKnownLocation: Location? = null
+    var lastKnownLocation: HoleLocation? = null
 
     var lastDetectedHoleDate: java.util.Date = Date.now()
 
@@ -44,9 +42,14 @@ class HoleDetectorViewModel
 
     fun handleHoleDetectedResult(result: HoleDetector.HoleDetectorResult){
         if(result.isHole && lastKnownLocation != null && notDuplicatedHole()){
+            if(lastKnownLocation == null){
+                Log.i(TAG, "Hole detected but could not generate results, as there was no location data present.")
+                return
+            }
+
             Log.i(TAG, "Hole detected!")
             lastDetectedHoleDate = Date.now()
-            val hole = Hole(lastKnownLocation?.latitude!!, lastKnownLocation?.longitude!!, Date.nowAsString())
+            val hole = Hole(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude, Date.nowAsString())
             holeDetected.execute({it.either(::handleFailure, ::handleHoleAdded)}, hole)
         }
         else{

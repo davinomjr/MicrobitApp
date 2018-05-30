@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="find_microbit">Buscar Microbit</string>
+    <string name="title_activity_hole_map">Mapa</string>
+    <string name="no_holes">Buracos não encontrados</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="start_detecting">Iniciar detecção</string>
+    <string name="stop_detecting">Parar detecção</string>
+    <string name="start_scanning">Buscar Microbit</string>
+    <string name="stop_scanning">Parar</string>
+    <string name="scanning_started">Buscando por Microbits pareados próximos...</string>
+    <string name="scanning_stopped">Busca interrompida</string>
+    <string name="permission_error">O aplicativo não pode executar corretamente sem as permissões necessárias. Por favor tente novamente.</string>
+    <string name="microbit_pairing_request">Antes de utilizar esse aplicativo, você percisa parear seu smartphone com a placa Microbit. Instruções de como fazer o pareamento podem ser encontradas no aplicativo micro:bit, da Samsung.</string>
+    <string name="starting_hole_detction">Iniciando detecção de buraco</string>
+    <string name="wait_time_detect">Iniciando detecção de buraco, esse processo pode levar de 5 a 10 segundos para ser iniciado. Por favor, aguarde.</string>
+    <string name="detection_started">Detecção iniciada</string>
+    <string name="detection_stopped">Detecção interrompida</string>
+    <string name="detecting_title">Detecção</string>
+    <string name="hole_map_title">Buracos</string>
+</resources>
