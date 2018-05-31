@@ -1,6 +1,8 @@
 package cin.ufpe.br.microbit_car_assist.storage
 
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
+import com.google.firebase.database.DataSnapshot
+import io.reactivex.Observable
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
@@ -10,5 +12,5 @@ import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 interface HoleRepository  {
 
     fun addHole(hole: Hole)
-    fun getHoles(callback: (holes: List<Hole?>) -> Unit)
+    fun getHoles(): Observable<DataSnapshot>
 }
