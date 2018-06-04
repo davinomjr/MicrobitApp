@@ -20,7 +20,6 @@ public class HoleTest {
     private HoleRepository mRepository;
     private Executor mExecutor;
     private MainThread mMainThread;
-    private GetHoles.Callback mCallback;
 
 
     public void startUp(){

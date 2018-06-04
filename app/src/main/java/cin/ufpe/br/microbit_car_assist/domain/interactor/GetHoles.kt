@@ -19,20 +19,13 @@ import javax.inject.Inject
  */
 
 class GetHoles
-@Inject constructor(private val holeRepository: HoleRepository) : UseCase<UseCase.None, (holes: List<Hole?>) -> Unit>() {
+@Inject constructor(private val holeRepository: HoleRepository) {
 
     private val TAG = GetHoles::class.java.simpleName
 
-    override suspend fun run(callback: (holes: List<Hole?>) -> Unit): Either<Failure, None> {
+    fun run(): Observable<List<Hole>> {
         Log.i(TAG , "run")
-        holeRepository.getHoles()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer { dataSnapshot ->
-                    val holes = dataSnapshot!!.children.map { it.getValue<Hole>(Hole::class.java) }
-                    callback(holes)
-                })
-
-        return Either.Right(None())
+        return holeRepository.getHoles()
+                .map { it.children.map { it.getValue<Hole>(Hole::class.java)!!}}
     }
 }

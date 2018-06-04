@@ -20,4 +20,5 @@
     <string name="detecting_title">Detecting</string>
     <string name="hole_map_title">Holes</string>
     <string name="microbit" translatable="false">Microbit</string>
+    <string name="hole_detected">Hole detected!</string>
 </resources>

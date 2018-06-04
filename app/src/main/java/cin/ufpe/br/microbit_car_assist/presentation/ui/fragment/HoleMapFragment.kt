@@ -4,6 +4,8 @@ package cin.ufpe.br.microbit_car_assist.presentation.ui.fragment
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.util.Log
+import cin.ufpe.br.microbit_car_assist.R
+import cin.ufpe.br.microbit_car_assist.presentation.ui.util.MessageUtil
 
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleDetectorViewModel
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleView
@@ -24,7 +26,10 @@ class HoleMapFragment : BaseHoleMapFragment() {
         Log.i(TAG, "onCreate")
         super.onCreate(savedInstanceState)
         holeDetectorViewModel = viewModel()
-        holeDetectorViewModel.lastDetectedHole.observe(this, Observer{ hole -> addHoleOnMap(hole!!)})
+        holeDetectorViewModel.lastDetectedHole.observe(this, Observer{ hole ->
+            addHoleOnMap(hole!!)
+            MessageUtil.showAlert(this.context, getString(R.string.hole_detected))
+        })
     }
 
     override fun onResume() {

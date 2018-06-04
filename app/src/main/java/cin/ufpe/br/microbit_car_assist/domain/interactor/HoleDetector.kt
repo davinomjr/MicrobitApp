@@ -11,9 +11,7 @@ import javax.inject.Inject
  * at 05/24/2018 7:19 PM
  */
 
-class HoleDetector
-@Inject constructor()
-    : UseCase<HoleDetector.HoleDetectorResult, AccelerometerData>() {
+class HoleDetector @Inject constructor() : UseCase<HoleDetector.HoleDetectorResult, AccelerometerData>() {
 
     private val ACCEL_Z_THRESHOLD = 0.42
 

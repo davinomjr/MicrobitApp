@@ -1,8 +1,11 @@
 package cin.ufpe.br.microbit_car_assist.presentation.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.*
+import android.content.Context
 import android.location.Location
 import android.util.Log
+import cin.ufpe.br.microbit_car_assist.App
+import cin.ufpe.br.microbit_car_assist.di.AppComponent
 import cin.ufpe.br.microbit_car_assist.domain.entities.AccelerometerData
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleDetected
@@ -26,7 +29,7 @@ class HoleDetectorViewModel
     @Inject constructor(val holeDetector: HoleDetector,
                         val holeDetected: HoleDetected)
     : BaseViewModel(),
-      ConnectionStatusListener{
+      ConnectionStatusListener {
 
     private val TAG: String = HoleDetectorViewModel::class.java.simpleName
 
@@ -41,9 +44,8 @@ class HoleDetectorViewModel
     }
 
     fun handleHoleDetectedResult(result: HoleDetector.HoleDetectorResult){
-        if(result.isHole && lastKnownLocation != null && notDuplicatedHole()){
+        if(result.isHole && notDuplicatedHole()){
             if(lastKnownLocation == null){
-                Log.i(TAG, "Hole detected but could not generate results, as there was no location data present.")
                 return
             }
 

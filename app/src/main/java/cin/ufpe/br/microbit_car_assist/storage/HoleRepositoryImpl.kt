@@ -1,5 +1,6 @@
 package cin.ufpe.br.microbit_car_assist.storage
 
+import android.util.Log
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -7,6 +8,7 @@ import com.google.firebase.database.ValueEventListener
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Cancellable
 import io.reactivex.functions.Consumer
 import io.reactivex.observers.DisposableObserver
@@ -22,69 +24,33 @@ import javax.inject.Inject
 
 class HoleRepositoryImpl @Inject constructor() : HoleRepository{
 
+    private val TAG = HoleRepositoryImpl::class.java.simpleName
+
     override fun addHole(hole: Hole) {
         val id: String = hole.id
         Database.it.child(id).setValue(hole)
     }
 
-
-    fun observeValue() : Flowable<DataSnapshot> {
-        return Flowable.create(FlowableOnSubscribe<DataSnapshot>(){
-            fun subscribe(emitter: FlowableEmitter<DataSnapshot>){
-                val valueEventListener = object: ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                        if(!emitter.isCancelled){
-                            emitter.onError(Exception(error.message))
-                        }
-                    }
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        emitter.onNext(snapshot)
-                    }
-                }
-
-                emitter.setCancellable(Cancellable {
-                    fun cancel(){
-                        Database.it.removeEventListener(valueEventListener)
-                    }
-                })
-
-                Database.it.addValueEventListener(valueEventListener)
-            }
-        }, BackpressureStrategy.MISSING)
-    }
-
-
-     override fun getHoles(): Observable<DataSnapshot> {
+    override fun getHoles(): Observable<DataSnapshot> {
+        Log.i(TAG, "getHoles()")
         return Observable.create({
-            fun subscribe(emitter: ObservableEmitter<DataSnapshot>) {
-                val singleValueListener = object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                        println(error)
-                    }
 
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        emitter.onNext(dataSnapshot)
-                    }
+            val singleValueListener = object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    println(error)
                 }
 
-                emitter.setCancellable({ Database.it.removeEventListener(singleValueListener) })
-
-                Database.it.addListenerForSingleValueEvent(singleValueListener)
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    Log.i(TAG, "got ${dataSnapshot.children.map { it.getValue<Hole>(Hole::class.java)!!}.count()} Holes")
+                    Database.it.removeEventListener(this)
+                    Log.i(TAG, "removing listener")
+                    it.onNext(dataSnapshot)
+                }
             }
+
+            it.setCancellable({ Database.it.removeEventListener(singleValueListener) })
+            Database.it.addListenerForSingleValueEvent(singleValueListener)
+            Log.i(TAG, "adding listener")
         })
     }
-
-//
-//            Database.it.addListenerForSingleValueEvent(object: ValueEventListener {
-//                override fun onCancelled(error: DatabaseError?) {
-//                    println(error)
-//                }
-//
-//                override fun onDataChange(dataSnapshot: DataSnapshot?) {
-//                    val holes: List<Hole?>  = dataSnapshot!!.children.map { it.getValue<Hole>(Hole::class.java)}
-//                    callback(holes)
-//                }
-//            })
-
-    }
+}

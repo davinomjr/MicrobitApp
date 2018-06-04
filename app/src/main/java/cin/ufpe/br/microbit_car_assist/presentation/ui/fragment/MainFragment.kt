@@ -76,6 +76,11 @@ class MainFragment : BaseFragment(), ScanResultsConsumer {
         return rootView
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        this.context.unregisterReceiver(broadcastReceiver)
+    }
+
     fun showPairingRationale(){
         MessageUtil.showAlert(this.activity, getString(R.string.microbit_pairing_request), {})
     }

@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
+ * at 05/23/2018 12:41 PM
  */
 class HoleDetectingFragment : BaseFragment() {
 
@@ -81,7 +82,7 @@ class HoleDetectingFragment : BaseFragment() {
     fun setupObservers(){
         holeDetectorViewModel.accelerometerData.observe(this, Observer { data ->
             val dataText = data.toString()
-            Log.i(TAG, "Detected acceelerometer change: $dataText")
+            Log.i(TAG, "Detected accelerometer change: $dataText")
             currentStream += "$dataText\n"
             holeDetectorViewModel.handleAccelerometerChange(holeDetectorViewModel.AccelerometerDataViewToData(data!!))
         })
@@ -113,7 +114,7 @@ class HoleDetectingFragment : BaseFragment() {
             dialog.setCancelable(false)
             dialog.setMessage(getString(R.string.wait_time_detect))
             dialog.show()
-            Observable.timer(12, TimeUnit.SECONDS)
+            Observable.timer(14, TimeUnit.SECONDS)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({

@@ -25,7 +25,7 @@ class LocationLiveData(val context: Context)
                          GoogleApiClient.OnConnectionFailedListener
 {
 
-    private val TAG = "LocationLiveData"
+    private val TAG = LocationLiveData::class.java.simpleName
     private var googleApiClient: GoogleApiClient = GoogleApiClient.Builder(context, this, this)
                                                                   .addApi(LocationServices.API)
                                                                   .build()
@@ -33,10 +33,12 @@ class LocationLiveData(val context: Context)
     override fun onActive() {
         super.onActive()
         googleApiClient.connect()
+        Log.i(TAG, "googleApiCLient ON")
     }
 
     override fun onInactive() {
         super.onInactive()
+        Log.i(TAG, "googleApiCLient ON")
         if (googleApiClient.isConnected) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
         }
@@ -46,6 +48,7 @@ class LocationLiveData(val context: Context)
 
 
     override fun onLocationChanged(location: Location?) {
+        Log.i(TAG, "Setting location")
         value = location
     }
 

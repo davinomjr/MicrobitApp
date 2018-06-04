@@ -18,4 +18,5 @@
     <string name="detection_stopped">Detecção interrompida</string>
     <string name="detecting_title">Detecção</string>
     <string name="hole_map_title">Buracos</string>
+    <string name="hole_detected">Buraco detectado!</string>
 </resources>

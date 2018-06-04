@@ -1,11 +1,16 @@
 package cin.ufpe.br.microbit_car_assist.presentation.ui.fragment
 
+import android.Manifest
+import android.arch.lifecycle.Observer
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cin.ufpe.br.microbit_car_assist.R
+import cin.ufpe.br.microbit_car_assist.presentation.data.LocationLiveData
 import cin.ufpe.br.microbit_car_assist.presentation.ui.entities.HoleMarker
 import cin.ufpe.br.microbit_car_assist.presentation.ui.util.MessageUtil
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleView
@@ -20,7 +25,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.observers.DisposableCompletableObserver
+import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import org.reactivestreams.Publisher
 import java.util.concurrent.TimeUnit
 
 /**
@@ -32,12 +41,25 @@ abstract class BaseHoleMapFragment : BaseFragment(), OnMapReadyCallback {
 
     private var TAG = BaseHoleMapFragment::class.java.simpleName
     protected lateinit var holesViewModel: HolesViewModel
-
     private var mMapReady: Boolean = false
     private lateinit var mMap: GoogleMap
     private lateinit var mClusterManager: ClusterManager<HoleMarker>
 
     private var delayMarkersMap: Long = 5
+
+    val mDisposable = object: DisposableObserver<Long?>(){
+        override fun onComplete() {
+            Log.i(TAG, "onComplete")
+        }
+
+        override fun onNext(t: Long) {
+            holesViewModel.getHoles()
+        }
+
+        override fun onError(e: Throwable) {
+            Log.e(TAG, e.message)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,13 +89,20 @@ abstract class BaseHoleMapFragment : BaseFragment(), OnMapReadyCallback {
         mMap = googleMap
         setupClusters()
         mMapReady = true
-        holesViewModel.getHoles(::showHolesOnMap)
 
-        Observable.interval(delayMarkersMap, TimeUnit.SECONDS)
+        Observable.interval(0, delayMarkersMap, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ holesViewModel.getHoles(::showHolesOnMap)})
+                .subscribe(mDisposable)
+
+        holesViewModel.holes.observe(this, Observer{ holes -> showHolesOnMap(holes!!) })
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mDisposable.dispose()
+    }
+
 
     private fun setupClusters(){
         mClusterManager = ClusterManager<HoleMarker>(this.activity, mMap)
@@ -98,10 +127,11 @@ abstract class BaseHoleMapFragment : BaseFragment(), OnMapReadyCallback {
         mClusterManager.clearItems()
         if(mMapReady) {
             if (holes.any()) {
-                holes.forEach { hole: HoleView -> addMarker(hole.latitude,hole.longitude,hole.date) }
-                moveCamera(LatLng(holes.last().latitude, holes.last().longitude), 15f, 3000)
+                holes.forEach { hole: HoleView ->
+                    Log.i(TAG, "Adding marker with latitude = ${hole.latitude} and longitude = ${hole.longitude}")
+                    addMarker(hole.latitude,hole.longitude,hole.date) }
             } else {
-                MessageUtil.showSnack(this.view!!, getString(R.string.no_holes))
+                Log.i(TAG, getString(R.string.no_holes))
             }
         }
         else{

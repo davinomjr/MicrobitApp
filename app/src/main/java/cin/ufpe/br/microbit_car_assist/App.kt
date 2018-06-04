@@ -5,6 +5,7 @@ import android.util.Log
 import cin.ufpe.br.microbit_car_assist.di.AppComponent
 import cin.ufpe.br.microbit_car_assist.di.DaggerAppComponent
 import cin.ufpe.br.microbit_car_assist.di.modules.AppModule
+import cin.ufpe.br.microbit_car_assist.presentation.data.LocationLiveData
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
@@ -20,10 +21,12 @@ class App: Application() {
                 .build()
     }
 
+    lateinit var lastKnownLocation: LocationLiveData
+
     override fun onCreate() {
         super.onCreate()
         Log.i("App","onCreate()")
         component.inject(this)
+        lastKnownLocation = LocationLiveData(this)
     }
-
 }

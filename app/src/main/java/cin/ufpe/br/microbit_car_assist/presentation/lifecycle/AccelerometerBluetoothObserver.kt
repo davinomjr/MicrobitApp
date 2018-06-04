@@ -136,7 +136,6 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
                         notifications_on = false
                     }
                 }
-
                 BleAdapterService.NOTIFICATION_OR_INDICATION_RECEIVED -> {
                     bundle = msg.data
                     service_uuid = bundle.getString(BleAdapterService.PARCEL_SERVICE_UUID)
@@ -184,15 +183,6 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
                         viewModel.accelerometerData.value = AccelerometerDataView(accel_output[0], accel_output[1], accel_output[2], pitch, roll)
                     }
                 }
-                BleAdapterService.GATT_REMOTE_RSSI -> {
-                    bundle = msg.data
-                    val rssi = bundle.getInt(BleAdapterService.PARCEL_RSSI)
-                }
-                BleAdapterService.MESSAGE -> {
-                    bundle = msg.data
-                    val text = bundle.getString(BleAdapterService.PARCEL_TEXT)
-                    //showMsg(Utility.htmlColorRed(text))
-                }
             }
         }
     }
@@ -220,7 +210,6 @@ class AccelerometerBluetoothObserver(val viewModel: HoleDetectorViewModel, val c
         if(!serviceInitialized) {
             val gattServiceIntent = Intent(context, BleAdapterService::class.java)
             context.bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-            this.onStart()
         }
     }
 

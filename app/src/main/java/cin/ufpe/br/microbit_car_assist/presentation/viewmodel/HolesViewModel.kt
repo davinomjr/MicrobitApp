@@ -5,9 +5,13 @@ import android.arch.lifecycle.ViewModel
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import cin.ufpe.br.microbit_car_assist.domain.interactor.GetHoles
 import cin.ufpe.br.microbit_car_assist.domain.interactor.HoleDetected
+import com.davinomjr.base.interactor.UseCase
 import com.davinomjr.base.viewmodel.BaseViewModel
 import kotlinx.coroutines.experimental.handleCoroutineException
 import javax.inject.Inject
+import io.reactivex.*
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
@@ -17,10 +21,15 @@ import javax.inject.Inject
 class HolesViewModel
 @Inject constructor(private val getHoles: GetHoles) : BaseViewModel() {
 
-    fun getHoles(callback: (holes: List<HoleView>) -> Unit){
-        return getHoles.execute({it.either(::handleFailure, {})}, {
-            holes -> callback(convertToHoleViewList(holes))
-        })
+    val holes: MutableLiveData<List<HoleView>> = MutableLiveData()
+
+    fun getHoles(): Disposable? {
+        return getHoles.run()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe({
+                    holes.postValue(convertToHoleViewList(it))
+                })
     }
 
     fun convertToHoleViewList(holes: List<Hole?>) : List<HoleView>{

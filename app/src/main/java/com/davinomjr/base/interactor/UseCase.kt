@@ -15,8 +15,10 @@
  */
 package com.davinomjr.base.interactor
 
+import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
 import com.davinomjr.base.domain.Either
 import com.davinomjr.base.domain.Failure
+import io.reactivex.Observable
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -32,7 +34,7 @@ import kotlinx.coroutines.experimental.launch
  */
 abstract class UseCase<out Type, in Params> where Type : Any {
 
-    abstract suspend fun run(params: Params): Either<Failure, Type>
+    abstract suspend fun run(params: Params): Either<Failure,Type>
 
     fun execute(onResult: (Either<Failure, Type>) -> Unit, params: Params) {
         val job = async(CommonPool) { run(params) }

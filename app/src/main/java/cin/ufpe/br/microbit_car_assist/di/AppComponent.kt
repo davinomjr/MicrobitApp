@@ -12,6 +12,7 @@ import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.BaseHoleMapFragm
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleDetectingFragment
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleMainMapFragment
 import cin.ufpe.br.microbit_car_assist.presentation.ui.fragment.HoleMapFragment
+import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleDetectorViewModel
 import cin.ufpe.br.microbit_car_assist.storage.HoleRepository
 import cin.ufpe.br.microbit_car_assist.storage.HoleRepositoryImpl
 import com.davinomjr.base.ui.BaseFragment
@@ -19,7 +20,7 @@ import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
-/**
+/*
  * Created by Davino Junior - dmtsj@{cin.ufpe.br, gmail.com}
  * at 05/22/2018 6:59 PM
  */
@@ -34,4 +35,5 @@ interface AppComponent {
     fun inject(app: App)
     fun inject(mapFragment: BaseHoleMapFragment)
     fun inject(holeDetectorFragment: HoleDetectingFragment)
+    fun inject(holeDetectorViewModel: HoleDetectorViewModel)
 }
