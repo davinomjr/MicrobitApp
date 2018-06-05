@@ -2,9 +2,7 @@ package cin.ufpe.br.microbit_car_assist.storage
 
 import android.util.Log
 import cin.ufpe.br.microbit_car_assist.domain.entities.Hole
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,7 +26,7 @@ class HoleRepositoryImpl @Inject constructor() : HoleRepository{
 
     override fun addHole(hole: Hole) {
         val id: String = hole.id
-        Database.it.child(id).setValue(hole)
+        FirebaseDatabase.getInstance().getReference("holes").child(id).setValue(hole)
     }
 
     override fun getHoles(): Observable<DataSnapshot> {
@@ -42,14 +40,19 @@ class HoleRepositoryImpl @Inject constructor() : HoleRepository{
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     Log.i(TAG, "got ${dataSnapshot.children.map { it.getValue<Hole>(Hole::class.java)!!}.count()} Holes")
-                    Database.it.removeEventListener(this)
+                    val holes = dataSnapshot.children.map { it.getValue<Hole>(Hole::class.java)!!}
+                    for(hole in holes){
+                        Log.i(TAG, "got hole with lat = ${hole.latitude} and long = ${hole.longitude}")
+                    }
+
+                    FirebaseDatabase.getInstance().getReference("holes").removeEventListener(this)
                     Log.i(TAG, "removing listener")
                     it.onNext(dataSnapshot)
                 }
             }
 
             it.setCancellable({ Database.it.removeEventListener(singleValueListener) })
-            Database.it.addListenerForSingleValueEvent(singleValueListener)
+            FirebaseDatabase.getInstance().getReference("holes").addListenerForSingleValueEvent(singleValueListener)
             Log.i(TAG, "adding listener")
         })
     }

@@ -1,18 +1,13 @@
 package cin.ufpe.br.microbit_car_assist.presentation.ui.fragment
 
-import android.Manifest
 import android.arch.lifecycle.Observer
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cin.ufpe.br.microbit_car_assist.R
-import cin.ufpe.br.microbit_car_assist.presentation.data.LocationLiveData
 import cin.ufpe.br.microbit_car_assist.presentation.ui.entities.HoleMarker
-import cin.ufpe.br.microbit_car_assist.presentation.ui.util.MessageUtil
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HoleView
 import cin.ufpe.br.microbit_car_assist.presentation.viewmodel.HolesViewModel
 import com.davinomjr.base.ui.BaseFragment
@@ -25,11 +20,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import org.reactivestreams.Publisher
 import java.util.concurrent.TimeUnit
 
 /**
@@ -114,7 +106,6 @@ abstract class BaseHoleMapFragment : BaseFragment(), OnMapReadyCallback {
         Log.i(TAG, "Adding marker to map")
         val marker = HoleMarker(latitude, longitude, title)
         mClusterManager.addItem(marker)
-        moveCamera(LatLng(latitude,longitude), 15f, 1000)
     }
 
     protected fun moveCamera(latLong: LatLng, zoomLevel: Float = 0f, animationTime: Int = 2000){

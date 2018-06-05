@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit
  */
 class HoleDetectingFragment : BaseFragment() {
 
-    private val TAG = "HoleDetectingFragment"
+    private val TAG = HoleDetectingFragment::class.java.simpleName
 
     private lateinit var holeViewModel: HolesViewModel
     private lateinit var holeDetectorViewModel: HoleDetectorViewModel
@@ -87,9 +87,14 @@ class HoleDetectingFragment : BaseFragment() {
             holeDetectorViewModel.handleAccelerometerChange(holeDetectorViewModel.AccelerometerDataViewToData(data!!))
         })
 
-        locationData.observe(this, Observer { location ->
+        locationData.observe(this.activity, Observer { location ->
             if(location != null) holeDetectorViewModel.lastKnownLocation = HoleLocation(location.latitude,location.longitude)
         })
+
+        Observable.interval(0, 2, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ locationData.changeLocation()})
     }
 
     fun handleDetectingButtonClick(view: View?){

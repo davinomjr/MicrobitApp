@@ -46,7 +46,6 @@ class LocationLiveData(val context: Context)
         googleApiClient.disconnect()
     }
 
-
     override fun onLocationChanged(location: Location?) {
         Log.i(TAG, "Setting location")
         value = location
@@ -65,5 +64,9 @@ class LocationLiveData(val context: Context)
     }
     override fun onConnectionFailed(p0: ConnectionResult) {
         Log.i(TAG, "onConnectionFailed")
+    }
+
+    fun changeLocation(){
+        if(googleApiClient.isConnected) this.onConnected(null)
     }
 }
